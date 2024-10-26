@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../category/entities/category.entity';
@@ -53,7 +53,6 @@ export class ProductService {
       hasNextPage: page < totalPages,
       hasPreviousPage: page > 1
     }
-
   }
 
   async findOne(id: number): Promise<Product> {
@@ -64,29 +63,23 @@ export class ProductService {
     return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto): Promise<any> {
-
-    const product = await this.productRepository.findOne({where: {id: id}});
-    if (!product) {
-      throw new NotFoundException('The requested product does not exist')
-    }
-    if(updateProductDto.category) {
-      const category = await this.categoryRepository.findOne({where: {id: updateProductDto.category}})
-      if (!category) {
-        throw new NotFoundException('The requested category does not exist')
-      }
-      product.category = category;
+  async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
+    const product = await this.productRepository.findOne({where: {id}});
+    if(!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
     }
 
-    product.name = updateProductDto.name;
-    product.description = updateProductDto.description;
-    product.quantity = updateProductDto.quantity;
+    const updatedProduct = await this.productRepository.merge(product, updateProductDto as DeepPartial<Product>)
 
-    return this.productRepository.update(id, updateProductDto);
+    return this.productRepository.save(updatedProduct);
 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number): Promise<Product> {
+    const product = await this.productRepository.findOne({where: {id}})
+    if(!product) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    return this.productRepository.remove(product);
   }
 }
