@@ -28,6 +28,8 @@
 
 A Dockerized NestJS app set up with PostgreSQL and pgAdmin for streamlined development.
 
+You can preview the api here: [Inventory Management API](https://possinove-inventory-mgt.onrender.com/)
+
 ## Prerequisites
 
 Ensure the following are installed on your local machine:
