@@ -25,7 +25,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         database: configService.get<string>('DATABASE'),
         entities: [Product, Category, EventLog],
         subscribers: [ProductSubscriber],
-        synchronize: false //for dev env only
+        synchronize: true //for dev env only
       })
     }),
     TypeOrmModule.forFeature([Category, Product]),
