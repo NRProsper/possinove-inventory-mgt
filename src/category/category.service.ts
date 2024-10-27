@@ -1,4 +1,4 @@
-import { Body, Injectable, NotFoundException, Param } from '@nestjs/common';
+import { BadRequestException, Body, Injectable, NotFoundException, Param } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -12,7 +12,11 @@ export class CategoryService {
     private readonly categoryRepository: Repository<Category>
   ) {}
 
-  create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+    const sameCategory = await this.categoryRepository.findOne({where: {name: createCategoryDto.name}})
+    if(sameCategory) {
+      throw new BadRequestException('The category with the same name already exists')
+    }
     return this.categoryRepository.save(createCategoryDto);
   }
 
@@ -28,6 +32,10 @@ export class CategoryService {
     const category = await this.categoryRepository.findOne({where: {id}});
     if (!category) {
       throw new NotFoundException(`Category with ID ${id} not found`);
+    }
+    const sameCategory = await this.categoryRepository.findOne({where: {name: name}});
+    if(sameCategory) {
+      throw new BadRequestException('The category with the same name already exists')
     }
 
     category.name = name;
