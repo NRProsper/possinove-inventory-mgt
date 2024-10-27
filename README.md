@@ -38,8 +38,8 @@ Ensure the following are installed on your local machine:
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/NRProsper/possinove-inventory-mgt.git
+cd possinove-inventory-mgt
 ```
 
 ### 2. Build and Run Services
@@ -67,7 +67,6 @@ This command will:
    - **Port**: `5432`
    - **Username**: `postgres`
    - **Password**: `postgres`
-4. Create a new database named **inventory**.
 
 ### 4. Access the Application
 
