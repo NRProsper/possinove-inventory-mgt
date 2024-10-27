@@ -3,7 +3,7 @@
 /node_modules
 /build
 
-/pgdata/**
+/pgdata
 
 # Logs
 logs
