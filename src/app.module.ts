@@ -9,19 +9,24 @@ import { CategoryModule } from './category/category.module';
 import { EventLog } from './log/entities/eventlog.entity';
 import { ProductSubscriber } from './subscribers/product.subscriber';
 import { SeedService } from './seed.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'db',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'postgres',
-      entities: [Product, Category, EventLog],
-      subscribers: [ProductSubscriber],
-      synchronize: true //for dev env only
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('HOSTNAME'),
+        port: configService.get<number>('PORT'),
+        username: configService.get<string>('USERNAME'),
+        password: configService.get<string>('PASSWORD'),
+        database: configService.get<string>('DATABASE'),
+        entities: [Product, Category, EventLog],
+        subscribers: [ProductSubscriber],
+        synchronize: false //for dev env only
+      })
     }),
     TypeOrmModule.forFeature([Category, Product]),
     ProductModule, CategoryModule
