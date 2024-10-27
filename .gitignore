@@ -4,6 +4,8 @@
 /build
 pgdata/
 
+/pgdata
+
 # Logs
 logs
 *.log
