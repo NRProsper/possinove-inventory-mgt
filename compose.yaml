@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3'
 
 services:
   db:
@@ -12,19 +12,19 @@ services:
     ports:
       - '5432:5432'
 
-  #  app:
-  #    build:
-  #      context: .
-  #      dockerfile: Dockerfile
-  #    container_name: nest-app
-  #    environment:
-  #      - PORT=3000
-  #    ports:
-  #      - '3000:3000'
-  #    depends_on:
-  #      - db
-  #    volumes:
-  #      - ./src:/app/src
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-app
+    environment:
+      - PORT=3000
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src
 
   pgadmin:
     image: dpage/pgadmin4

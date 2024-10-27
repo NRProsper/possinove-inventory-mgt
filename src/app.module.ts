@@ -14,11 +14,11 @@ import { SeedService } from './seed.service';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: 'db',
       port: 5432,
       username: 'postgres',
       password: 'postgres',
-      database: 'inventory',
+      database: 'postgres',
       entities: [Product, Category, EventLog],
       subscribers: [ProductSubscriber],
       synchronize: true //for dev env only
