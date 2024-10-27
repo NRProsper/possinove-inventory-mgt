@@ -35,6 +35,12 @@ export class ProductController {
     return this.productService.findOne(+id);
   }
 
+  @ApiOperation({summary: 'Get products by their category id'})
+  @Get('category/:id')
+  findByCategory(@Param('id') id: number) {
+    return this.productService.productsByCategory(+id);
+  }
+
   @ApiOperation({summary: 'Update a single product'})
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDto) {

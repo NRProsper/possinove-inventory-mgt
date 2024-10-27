@@ -8,7 +8,9 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({transform: true}))
 
   const apiPrefix = 'api'
-  app.setGlobalPrefix(apiPrefix)
+  app.setGlobalPrefix(apiPrefix, {
+    exclude: ['/'],
+  })
 
   const config = new DocumentBuilder()
     .setTitle('Possinove Inventory Management')
