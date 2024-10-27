@@ -8,6 +8,7 @@ import { Category } from './category/entities/category.entity';
 import { CategoryModule } from './category/category.module';
 import { EventLog } from './log/entities/eventlog.entity';
 import { ProductSubscriber } from './subscribers/product.subscriber';
+import { SeedService } from './seed.service';
 
 @Module({
   imports: [
@@ -22,9 +23,10 @@ import { ProductSubscriber } from './subscribers/product.subscriber';
       subscribers: [ProductSubscriber],
       synchronize: true //for dev env only
     }),
+    TypeOrmModule.forFeature([Category, Product]),
     ProductModule, CategoryModule
   ],
   controllers: [AppController],
-  providers: [AppService, ProductSubscriber],
+  providers: [AppService, SeedService],
 })
 export class AppModule {}
