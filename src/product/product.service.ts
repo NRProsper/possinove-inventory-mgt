@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { DeepPartial, Repository } from 'typeorm';
@@ -19,6 +19,10 @@ export class ProductService {
   ) {}
   
   async create(createProductDto: CreateProductDto): Promise<Product> {
+
+    if(createProductDto.quantity < 0) {
+      throw new BadRequestException('Quantity must be a positive number');
+    }
 
     const product = new Product();
 
@@ -64,6 +68,10 @@ export class ProductService {
   }
 
   async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
+    if(updateProductDto.quantity < 0) {
+      throw new BadRequestException('Quantity must be a positive number');
+    }
+
     const product = await this.productRepository.findOne({where: {id}});
     if(!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
@@ -75,10 +83,20 @@ export class ProductService {
 
   }
 
+  async productsByCategory(id: number): Promise<Product []> {
+    return await this.productRepository.find({
+      where: {category : { id } } as any,
+      relations: ['category'],
+    })
+  }
+
   async remove(id: number): Promise<Product> {
     const product = await this.productRepository.findOne({where: {id}})
     if(!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    if(product.quantity > 0) {
+      throw new BadRequestException(`Cannot delete product with ID ${id} as it's quantity is greater than 0`)
     }
     return this.productRepository.remove(product);
   }
