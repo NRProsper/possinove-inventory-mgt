@@ -75,6 +75,13 @@ export class ProductService {
 
   }
 
+  async productsByCategory(id: number): Promise<Product []> {
+    return await this.productRepository.find({
+      where: {category : { id } } as any,
+      relations: ['category'],
+    })
+  }
+
   async remove(id: number): Promise<Product> {
     const product = await this.productRepository.findOne({where: {id}})
     if(!product) {
